@@ -7,8 +7,18 @@ type JokeEntity {
   url: String!
   icon_url: String!
   value: String!
+  categories: [String!]!
+}
+
+type JokesOutput {
+  total: Int!
+  result: [JokeEntity!]!
+  error: String
 }
 
 type Query {
-  getRandomJoke: JokeEntity!
+  getCategories: [String!]!
+  findRandomJoke(addToFavourite: Boolean!): JokeEntity!
+  findRandomJokeByCategory(category: String!, addToFavourite: Boolean!): JokeEntity!
+  findJokeByKeyWords(keyWords: String!, count: Int, addToFavourite: Boolean!): JokesOutput!
 }
