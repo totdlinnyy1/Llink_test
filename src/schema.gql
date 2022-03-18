@@ -1,0 +1,14 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+type JokeEntity {
+  id: String!
+  url: String!
+  icon_url: String!
+  value: String!
+}
+
+type Query {
+  getRandomJoke: JokeEntity!
+}
