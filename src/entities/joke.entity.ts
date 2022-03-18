@@ -1,11 +1,14 @@
 import {Field, ObjectType} from '@nestjs/graphql'
-import {BaseEntity, Column, Entity, PrimaryColumn} from 'typeorm'
+import {BaseEntity, Column, Entity, PrimaryGeneratedColumn} from 'typeorm'
 
 @Entity('jokes')
 @ObjectType()
 export class JokeEntity extends BaseEntity {
+  @PrimaryGeneratedColumn()
+  joke_id: number
+
   @Field(() => String)
-  @PrimaryColumn('text')
+  @Column()
   id!: string
 
   @Field(() => String)

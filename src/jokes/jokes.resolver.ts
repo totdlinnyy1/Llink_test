@@ -43,4 +43,9 @@ export class JokesResolver {
       args.addToFavourite
     )
   }
+
+  @Query(() => [JokeEntity])
+  async showFavourite(): Promise<JokeEntity[]> {
+    return this.jokeService.showFavourite()
+  }
 }

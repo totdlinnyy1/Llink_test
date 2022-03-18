@@ -21,4 +21,5 @@ type Query {
   findRandomJoke(addToFavourite: Boolean!): JokeEntity!
   findRandomJokeByCategory(category: String!, addToFavourite: Boolean!): JokeEntity!
   findJokeByKeyWords(keyWords: String!, count: Int, addToFavourite: Boolean!): JokesOutput!
+  showFavourite: [JokeEntity!]!
 }

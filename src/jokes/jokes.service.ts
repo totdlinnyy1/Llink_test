@@ -101,4 +101,12 @@ export class JokesService {
       console.log(error.message)
     }
   }
+
+  async showFavourite(): Promise<JokeEntity[]> {
+    try {
+      return this.jokeRepository.find()
+    } catch (e) {
+      throw new Error(e.message)
+    }
+  }
 }
