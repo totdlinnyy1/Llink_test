@@ -7,14 +7,16 @@ import {JokesModule} from './jokes/jokes.module'
 import {GraphQLModule} from '@nestjs/graphql'
 import {ApolloDriver, ApolloDriverConfig} from '@nestjs/apollo'
 import {JokeEntity} from './entities/joke.entity'
+import {ConfigModule} from '@nestjs/config'
 
 const isDevelopment = process.env.NODE_ENV === 'development'
 
 @Module({
   imports: [
+    ConfigModule.forRoot({isGlobal: true}),
     TypeOrmModule.forRoot({
       type: 'postgres',
-      url: 'postgres://postgres:postgres@localhost:5432/jokes',
+      url: process.env.DATABASE_URL,
       synchronize: true,
       entities: [JokeEntity]
     }),
