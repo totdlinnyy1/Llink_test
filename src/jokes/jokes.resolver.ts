@@ -11,11 +11,13 @@ import {FindJokeByCategoryArgs} from './dto/findJokeByCategory.args'
 export class JokesResolver {
   constructor(private readonly jokeService: JokesService) {}
 
+  // Запрос на получение всех категорий из api
   @Query(() => [String])
   async getCategories(): Promise<Observable<AxiosResponse<string[]>>> {
     return this.jokeService.getCategories()
   }
 
+  // Запрос на получение рандомной шутки из api
   @Query(() => JokeEntity)
   async findRandomJoke(
     @Args('addToFavourite', {type: () => Boolean}) addToFavourite: boolean
@@ -23,6 +25,7 @@ export class JokesResolver {
     return this.jokeService.getRandomJoke(addToFavourite)
   }
 
+  // Запрос на получение рандомной шутки из api по нужной категории
   @Query(() => JokeEntity)
   async findRandomJokeByCategory(
     @Args() args: FindJokeByCategoryArgs
@@ -33,6 +36,7 @@ export class JokesResolver {
     )
   }
 
+  // Запрос на получение списка шуток из api по ключевым словам
   @Query(() => JokesOutput)
   async findJokeByKeyWords(
     @Args() args: FindJokeByKeyWordsArgs
@@ -44,6 +48,7 @@ export class JokesResolver {
     )
   }
 
+  // Запрос на получение шуток добавленных в избранное
   @Query(() => [JokeEntity])
   async showFavourite(): Promise<JokeEntity[]> {
     return this.jokeService.showFavourite()

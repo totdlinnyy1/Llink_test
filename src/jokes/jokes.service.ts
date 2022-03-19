@@ -21,16 +21,20 @@ export class JokesService {
     private httpService: HttpService
   ) {}
 
+  // Получение списка категорий
   async getCategories(): Promise<Observable<AxiosResponse<string[]>>> {
     try {
       return this.httpService
         .get(getCategoriesUrl)
         .pipe(map((response) => response.data))
     } catch (e) {
-      console.error(e)
+      const error = e as Error | AxiosError
+      console.log(error.message)
+      throw new Error(error.message)
     }
   }
 
+  // Получение рандомной шутки
   async getRandomJoke(
     addToFavourite: boolean
   ): Promise<Observable<Promise<AxiosResponse<JokeEntity>>>> {
@@ -47,9 +51,11 @@ export class JokesService {
     } catch (e) {
       const error = e as Error | AxiosError
       console.log(error.message)
+      throw new Error(error.message)
     }
   }
 
+  // Получение рандомной шутки по категории
   async getRandomJokeByCategory(
     category: string,
     addToFavourite: boolean
@@ -74,6 +80,7 @@ export class JokesService {
     }
   }
 
+  // Получение списка шуток по ключевым словам
   async getJokeByKeyWords(
     keyWords: string,
     count: number,
@@ -110,6 +117,7 @@ export class JokesService {
     }
   }
 
+  // Получение списка избранных шуток
   async showFavourite(): Promise<JokeEntity[]> {
     try {
       return this.jokeRepository.find()
