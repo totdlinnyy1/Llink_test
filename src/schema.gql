@@ -13,7 +13,6 @@ type JokeEntity {
 type JokesOutput {
   total: Int!
   result: [JokeEntity!]!
-  error: String
 }
 
 type Query {

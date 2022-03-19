@@ -8,7 +8,4 @@ export class JokesOutput {
 
   @Field(() => [JokeEntity])
   result?: JokeEntity[]
-
-  @Field(() => String, {nullable: true})
-  error?: string
 }

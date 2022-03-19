@@ -6,6 +6,12 @@ import {JokeEntity} from '../entities/joke.entity'
 import {JokesOutput} from './dto/jokes.output'
 import {InjectRepository} from '@nestjs/typeorm'
 import {Repository} from 'typeorm'
+import {
+  getCategoriesUrl,
+  getRandomJokeByCategoryUrl,
+  getJokeByKeyWordsUrl,
+  getRandomJokeUrl
+} from '../constants'
 
 @Injectable()
 export class JokesService {
@@ -18,7 +24,7 @@ export class JokesService {
   async getCategories(): Promise<Observable<AxiosResponse<string[]>>> {
     try {
       return this.httpService
-        .get('https://api.chucknorris.io/jokes/categories')
+        .get(getCategoriesUrl)
         .pipe(map((response) => response.data))
     } catch (e) {
       console.error(e)
@@ -29,17 +35,15 @@ export class JokesService {
     addToFavourite: boolean
   ): Promise<Observable<Promise<AxiosResponse<JokeEntity>>>> {
     try {
-      return this.httpService
-        .get('https://api.chucknorris.io/jokes/random')
-        .pipe(
-          map(async (response) => {
-            const data = response.data
-            if (addToFavourite) {
-              await this.jokeRepository.save(data)
-            }
-            return data
-          })
-        )
+      return this.httpService.get(getRandomJokeUrl).pipe(
+        map(async (response) => {
+          const data = response.data
+          if (addToFavourite) {
+            await this.jokeRepository.save(data)
+          }
+          return data
+        })
+      )
     } catch (e) {
       const error = e as Error | AxiosError
       console.log(error.message)
@@ -51,20 +55,22 @@ export class JokesService {
     addToFavourite: boolean
   ): Promise<Observable<Promise<AxiosResponse<JokeEntity>>>> {
     try {
-      return this.httpService
-        .get(`https://api.chucknorris.io/jokes/random?category=${category}`)
-        .pipe(
-          map(async (response) => {
-            const data = response.data
-            if (addToFavourite) {
-              await this.jokeRepository.save(data)
-            }
-            return data
-          })
-        )
+      if (category === '') {
+        throw new Error('Category is incorrect')
+      }
+      return this.httpService.get(getRandomJokeByCategoryUrl(category)).pipe(
+        map(async (response) => {
+          const data = response.data
+          if (addToFavourite) {
+            await this.jokeRepository.save(data)
+          }
+          return data
+        })
+      )
     } catch (e) {
       const error = e as Error | AxiosError
       console.log(error.message)
+      throw new Error(error.message)
     }
   }
 
@@ -72,33 +78,35 @@ export class JokesService {
     keyWords: string,
     count: number,
     addToFavourite: boolean
-  ): Promise<Observable<Promise<AxiosResponse<JokesOutput>>> | JokesOutput> {
+  ): Promise<Observable<Promise<AxiosResponse<JokesOutput>>>> {
     try {
-      return this.httpService
-        .get(`https://api.chucknorris.io/jokes/search?query=${keyWords}`)
-        .pipe(
-          map(async (response) => {
-            const data = response.data
-            if (count > 0) {
-              const result = data.result.slice(0, count)
-              if (addToFavourite) {
-                await this.jokeRepository.save(result)
-              }
-              return {
-                total: data.total,
-                result
-              }
-            } else {
-              if (addToFavourite) {
-                await this.jokeRepository.save(data.result)
-              }
+      if (keyWords === '') {
+        throw new Error('Key words is incorrect')
+      }
+      return this.httpService.get(getJokeByKeyWordsUrl(keyWords)).pipe(
+        map(async (response) => {
+          const data = response.data
+          if (count > 0) {
+            const result = data.result.slice(0, count)
+            if (addToFavourite) {
+              await this.jokeRepository.save(result)
             }
-            return data
-          })
-        )
+            return {
+              total: data.total,
+              result
+            }
+          } else {
+            if (addToFavourite) {
+              await this.jokeRepository.save(data.result)
+            }
+          }
+          return data
+        })
+      )
     } catch (e) {
       const error = e as Error | AxiosError
       console.log(error.message)
+      throw new Error(error.message)
     }
   }
 
