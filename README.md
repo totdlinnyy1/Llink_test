@@ -66,3 +66,10 @@ npm run jest
 or
 yarn jest
 ```
+
+Docker Pull Command
+-----------
+```
+docker pull totdlinnyy/llink-test
+```
+
